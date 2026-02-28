@@ -140,5 +140,5 @@ function sendWA(){
   const a=document.getElementById('f-area').value||'Not specified';
   const l=document.getElementById('f-loc').value||'Not specified';
   const msg=`Namaste Vinod ji! 🙏\n\nMain quote lena chahta hoon:\n\n*Name:* ${n}\n*Project Type:* ${t}\n*Area / Size:* ${a}\n*Location:* ${l}\n\nPlease contact me. Thank you!`;
-  window.open('https://wa.me/919468971373?text='+encodeURIComponent(msg),'_blank');
+  window.open('https://wa.me/916378305033?text='+encodeURIComponent(msg),'_blank');
 }
