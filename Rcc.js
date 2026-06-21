@@ -91,17 +91,23 @@ const tTrack=document.getElementById('testiTrack');
 const tCards=document.querySelectorAll('.testi-card');
 const tDots=document.querySelectorAll('.testi-dot');
 const tTot=tCards.length;
+function testiVis(){return window.innerWidth<=960?1:3}
+function testiMax(){return Math.max(0,tTot-testiVis())}
 function goT(n){
-  tIdx=(n+tTot)%tTot;
+  const mx=testiMax();
+  tIdx=((n%(mx+1))+(mx+1))%(mx+1);
   const w=tCards[0]?.offsetWidth||300;
-  const mx=Math.max(0,tTot-3);
-  tTrack.style.transform=`translateX(-${Math.min(tIdx,mx)*(w+20)}px)`;
-  tDots.forEach((d,i)=>d.classList.toggle('active',i===tIdx%tDots.length));
+  const gap=20;
+  tTrack.style.transform=`translateX(-${tIdx*(w+gap)}px)`;
+  tDots.forEach((d,i)=>d.classList.toggle('active',i===tIdx));
 }
 tDots.forEach((d,i)=>d.onclick=()=>goT(i));
-tAuto=setInterval(()=>goT(tIdx+1),4600);
-tTrack.addEventListener('mouseenter',()=>clearInterval(tAuto));
-tTrack.addEventListener('mouseleave',()=>{tAuto=setInterval(()=>goT(tIdx+1),4600)});
+function startT(){tAuto=setInterval(()=>goT(tIdx+1),4600)}
+function stopT(){clearInterval(tAuto)}
+startT();
+tTrack.addEventListener('mouseenter',()=>stopT());
+tTrack.addEventListener('mouseleave',()=>startT());
+window.addEventListener('resize',()=>{goT(Math.min(tIdx,testiMax()))});
 
 /* ──── FAQ ──── */
 document.querySelectorAll('.faq-q').forEach(btn=>btn.addEventListener('click',()=>{
@@ -135,10 +141,14 @@ document.querySelectorAll('.reveal,.service-card,.why-item,.owner-card,.counter-
 
 /* ──── WHATSAPP FORM ──── */
 function sendWA(){
-  const n=document.getElementById('f-name').value||'Not specified';
-  const t=document.getElementById('f-type').value||'Not specified';
-  const a=document.getElementById('f-area').value||'Not specified';
-  const l=document.getElementById('f-loc').value||'Not specified';
+  const n=document.getElementById('f-name').value.trim();
+  const t=document.getElementById('f-type').value;
+  const a=document.getElementById('f-area').value.trim();
+  const l=document.getElementById('f-loc').value.trim();
+  if(!n){alert('Please enter your name.');document.getElementById('f-name').focus();return}
+  if(!t){alert('Please select a project type.');document.getElementById('f-type').focus();return}
+  if(!a){alert('Please enter the area / size.');document.getElementById('f-area').focus();return}
+  if(!l){alert('Please enter your location.');document.getElementById('f-loc').focus();return}
   const msg=`Namaste Vinod ji! 🙏\n\nMain quote lena chahta hoon:\n\n*Name:* ${n}\n*Project Type:* ${t}\n*Area / Size:* ${a}\n*Location:* ${l}\n\nPlease contact me. Thank you!`;
   window.open('https://wa.me/916378305033?text='+encodeURIComponent(msg),'_blank');
 }
